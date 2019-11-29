@@ -302,6 +302,9 @@
     margin-bottom: 0;
   }
 
+  .post-full-content div[class*="language-"] {
+    width: 100%;
+  }
   .post-full-content code {
     padding: 0 5px 2px;
     font-size: 0.8em;

@@ -1,17 +1,17 @@
 <template>
   <main id="site-main" class="site-main outer">
     <div class="inner">
-      <article class="post-full" :class="{ 'no-image': !current.image }">
+      <article class="post-full" :class="{ 'no-image': !$frontmatter.image }">
         <header class="post-full-header">
           <section class="post-full-meta">
             <time class="post-full-meta-date" :datetime="datetime">{{ localeDate }}</time>
             <span class="date-divider" v-if="primaryTag">/</span>
             <a :href="$withBase(`/tags/${primaryTag}`)" v-if="primaryTag">{{ primaryTag }}</a>
           </section>
-          <h1 class="post-full-title">{{ current.title }}</h1>
+          <h1 class="post-full-title">{{ $frontmatter.title }}</h1>
         </header>
 
-        <figure v-if="current.image" class="post-full-image" :style="backgroundImage"></figure>
+        <figure v-if="$frontmatter.image" class="post-full-image" :style="backgroundImage"></figure>
 
         <section class="post-full-content">
           <Content class="post-content" />
@@ -22,32 +22,29 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
   import { head, kebabCase } from 'lodash'
 
   export default {
     computed: {
-      ...mapGetters(['current']),
-
       datetime () {
-        return new Date(this.current.publish).toISOString()
+        return new Date(this.$frontmatter.publish).toISOString()
       },
 
       localeDate () {
-        return new Date(this.current.publish).toLocaleDateString()
+        return new Date(this.$frontmatter.publish).toLocaleDateString()
       },
 
       primaryTag () {
-        if (!this.current.tags || this.current.tags.length === 0) {
+        if (!this.$frontmatter.tags || this.$frontmatter.tags.length === 0) {
           return null
         }
 
-        return head(this.current.tags)
+        return head(this.$frontmatter.tags)
       },
 
       backgroundImage () {
         return {
-          'background-image': `url(${this.$withBase(this.current.image)})`
+          'background-image': `url(${this.$withBase(this.$frontmatter.image.replace('w_auto', 'w_2000'))})`
         }
       }
     },
@@ -305,6 +302,10 @@
 
   .post-full-content blockquote p:last-child {
     margin-bottom: 0;
+  }
+
+  .post-full-content div[class*="language-"] {
+    width: 100%;
   }
 
   .post-full-content code {

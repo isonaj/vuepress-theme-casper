@@ -2,6 +2,12 @@
   <article class="post-card" :class="{ 'no-image': !post.image }">
     <a v-if="post.image" class="post-card-image-link" :href="$withBase(post.path)" aria-label="link to post">
       <div class="post-card-image" :style="imageStyle"></div>
+      <!--
+      <div class="post-card-image">
+        <img :srcset="srcset"
+         :src="post.image" alt="Cover image">
+      </div>
+      -->
     </a>
     <div class="post-card-content">
         <a class="post-card-content-link" :href="$withBase(post.path)" aria-label="link to post">
@@ -14,7 +20,7 @@
           </section>
         </a>
         <footer class="post-card-meta">
-          <span class="reading-time" v-if="post.readingTime">{{ post.readingTime }}</span>
+          <span class="reading-time" v-if="post.readingTime">{{ post.readingTime.text }}</span>
         </footer>
     </div>
   </article>
@@ -28,7 +34,7 @@
     computed: {
       imageStyle () {
         return {
-          'background-image': `url(${this.$withBase(this.post.image)})`
+          'background-image': `url(${this.$withBase(this.post.image.replace('w_auto', 'w_600'))})`
         }
       }
     },
@@ -41,6 +47,10 @@
 <style lang="scss">
   @import '../styles/variables';
 
+  .post-card-image img {
+    width: 100%;
+    height: 100%;
+  }
   .post-card {
     flex: 1 1 300px;
     display: flex;
